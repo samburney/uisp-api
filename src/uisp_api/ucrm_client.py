@@ -1,4 +1,4 @@
-from .uisp_common import UispCommon
+from .uisp_common import UispCommon, GenericObject
 
 
 class UcrmClient(UispCommon):
@@ -11,3 +11,38 @@ class UcrmClient(UispCommon):
 
         # Get a persistent requests session
         self.conn = self._make_requests_session()
+
+    def new_client(self):
+        '''
+        Get an instance of the Client object
+        '''
+        client = _Clients(self)
+
+        return client
+
+    def get_client(self, client_id):
+        '''
+        Get an instance of the Client object
+        '''
+        client = _Clients(self, client_id)
+
+        return client
+
+
+class _Clients(GenericObject):
+    '''
+    Object representing the `clients/{id}` API method
+    '''
+    def __init__(self, parent, client_id=None):
+        self._id = client_id
+        self._schema = 'clients'
+        self._endpoint = f'clients/{self._id}'
+
+        # Initialising GenericObject class
+        super().__init__(parent)
+
+        # Perform any necessary data sanity updates
+        if self._data is not None:
+            # Rempve `addressData` attribute as it's redundant
+            if 'addressData' in self._data:
+                del self._data['addressData']

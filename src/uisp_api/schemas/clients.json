@@ -1,0 +1,174 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "userIdent": {
+            "type": "string"
+        },
+        "previousIsp": {
+            "type": "string"
+        },
+        "isLead": {
+            "type": "boolean"
+        },
+        "clientType": {
+            "anyOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "enum": [
+                        1,
+                        2
+                    ]
+                }
+            ]
+        },
+        "companyName": {
+            "type": "string"
+        },
+        "companyRegistrationNumber": {
+            "type": "string"
+        },
+        "companyTaxId": {
+            "type": "string"
+        },
+        "companyWebsite": {
+            "type": "string"
+        },
+        "companyContactFirstName": {
+            "type": "string"
+        },
+        "companyContactLastName": {
+            "type": "string"
+        },
+        "firstName": {
+            "type": "string"
+        },
+        "lastName": {
+            "type": "string"
+        },
+        "street1": {
+            "type": "string"
+        },
+        "street2": {
+            "type": "string"
+        },
+        "city": {
+            "type": "string"
+        },
+        "countryId": {
+            "type": "number"
+        },
+        "stateId": {
+            "type": "number"
+        },
+        "zipCode": {
+            "type": "string"
+        },
+        "fullAddress": {
+            "type": "string"
+        },
+        "invoiceStreet1": {
+            "type": "string"
+        },
+        "invoiceStreet2": {
+            "type": "string"
+        },
+        "invoiceCity": {
+            "type": "string"
+        },
+        "invoiceStateId": {
+            "type": "number"
+        },
+        "invoiceCountryId": {
+            "type": "number"
+        },
+        "invoiceZipCode": {
+            "type": "string"
+        },
+        "invoiceAddressSameAsContact": {
+            "type": "boolean"
+        },
+        "note": {
+            "type": "string"
+        },
+        "sendInvoiceByPost": {
+            "type": "boolean"
+        },
+        "invoiceMaturityDays": {
+            "type": "number"
+        },
+        "stopServiceDue": {
+            "type": "boolean"
+        },
+        "stopServiceDueDays": {
+            "type": "number"
+        },
+        "organizationId": {
+            "type": "number"
+        },
+        "tax1Id": {
+            "type": "number"
+        },
+        "tax2Id": {
+            "type": "number"
+        },
+        "tax3Id": {
+            "type": "number"
+        },
+        "registrationDate": {
+            "type": "string"
+        },
+        "username": {
+            "type": "string"
+        },
+        "avatarColor": {
+            "type": "string"
+        },
+        "addressGpsLat": {
+            "type": "number"
+        },
+        "addressGpsLon": {
+            "type": "number"
+        },
+        "generateProformaInvoices": {
+            "type": "boolean"
+        },
+        "referral": {
+            "type": "string"
+        },
+        "contacts": {
+            "type": "array"
+        },
+        "attributes": {
+            "type": "array"
+        },
+        "password": {
+            "type": "string"
+        },
+        "addressData": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "enum": [
+                        "OpenStreetMap",
+                        "GoogleMaps"
+                    ]
+                },
+                "formattedAddress": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "addressComponents": {
+                    "type": "array"
+                }
+            }
+        }
+    }
+}
