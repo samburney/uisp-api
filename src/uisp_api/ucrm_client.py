@@ -16,7 +16,7 @@ class UcrmClient(UispCommon):
         '''
         Get an instance of the Client object
         '''
-        client = _Clients(self)
+        client = _Client(self)
 
         return client
 
@@ -24,7 +24,7 @@ class UcrmClient(UispCommon):
         '''
         Get an instance of the Client object
         '''
-        client = _Clients(self, client_id)
+        client = _Client(self, client_id)
 
         return client
 
