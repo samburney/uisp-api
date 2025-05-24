@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "servicePlanId": {
+      "type": "number"
+    },
+    "prepaid": {
+      "type": "boolean"
+    },
+    "servicePlanPeriodId": {
+      "type": "number"
+    },
+    "activeFrom": {
+      "type": "string"
+    },
+    "activeTo": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "note": {
+      "type": "string"
+    },
+    "invoicingStart": {
+      "type": "string"
+    },
+    "invoicingPeriodType": {
+      "enum": [
+        1,
+        2
+      ]
+    },
+    "invoicingPeriodStartDay": {
+      "type": "number"
+    },
+    "nextInvoicingDayAdjustment": {
+      "type": "number"
+    },
+    "invoicingProratedSeparately": {
+      "type": "boolean"
+    },
+    "invoicingSeparately": {
+      "type": "boolean"
+    },
+    "sendEmailsAutomatically": {
+      "type": "boolean"
+    },
+    "useCreditAutomatically": {
+      "type": "boolean"
+    },
+    "invoiceLabel": {
+      "type": "string"
+    },
+    "fullAddress": {
+      "type": "string"
+    },
+    "street1": {
+      "type": "string"
+    },
+    "street2": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "countryId": {
+      "type": "number"
+    },
+    "stateId": {
+      "type": "number"
+    },
+    "zipCode": {
+      "type": "string"
+    },
+    "addressGpsLat": {
+      "type": "number"
+    },
+    "addressGpsLon": {
+      "type": "number"
+    },
+    "contractId": {
+      "type": "string"
+    },
+    "contractLengthType": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "enum": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "minimumContractLengthMonths": {
+      "type": "number"
+    },
+    "contractEndDate": {
+      "type": "string"
+    },
+    "discountType": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "discountValue": {
+      "type": "number"
+    },
+    "discountInvoiceLabel": {
+      "type": "string"
+    },
+    "discountFrom": {
+      "type": "string"
+    },
+    "discountTo": {
+      "type": "string"
+    },
+    "tax1Id": {
+      "type": "number"
+    },
+    "tax2Id": {
+      "type": "number"
+    },
+    "tax3Id": {
+      "type": "number"
+    },
+    "fccBlockId": {
+      "type": "string"
+    },
+    "servicePlanGroupId": {
+      "type": "string"
+    },
+    "isQuoted": {
+      "type": "boolean"
+    },
+    "unmsClientSiteId": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "array"
+    },
+    "addressData": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "OpenStreetMap",
+            "GoogleMaps"
+          ]
+        },
+        "formattedAddress": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        },
+        "addressComponents": {
+          "type": "array"
+        }
+      }
+    }
+  },
+  "required": [
+    "servicePlanPeriodId"
+  ]
+}

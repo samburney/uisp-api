@@ -28,8 +28,24 @@ class UcrmClient(UispCommon):
 
         return client
 
+    def new_service(self):
+        '''
+        Get an instance of the Service object
+        '''
+        service = _Service(self)
 
-class _Clients(GenericObject):
+        return service
+
+    def get_service(self, service_id):
+        '''
+        Get an instance of the Service object
+        '''
+        service = _Service(self, service_id)
+
+        return service
+
+
+class _Client(GenericObject):
     '''
     Object representing the `clients/{id}` API method
     '''
@@ -46,3 +62,38 @@ class _Clients(GenericObject):
             # Rempve `addressData` attribute as it's redundant
             if 'addressData' in self._data:
                 del self._data['addressData']
+
+
+class _Service(GenericObject):
+    '''
+    Object representing the `clients/services/{id}` API method
+    '''
+
+    def __init__(self, parent, service_id=None):
+        self._id = service_id
+        self._schema = 'services'
+        self._endpoint = f'clients/services/{self._id}'
+
+        # Initialising GenericObject class
+        super().__init__(parent)
+
+        # Perform any necessary data sanity updates
+        # TODO
+
+    @staticmethod
+    def _status_map():
+        return {
+            0: 'prepared',
+            1: 'active',
+            2: 'ended',
+            3: 'suspended',
+            4: 'prepared blocked',
+            5: 'obsolete',
+            6: 'deferred',
+            7: 'quoted',
+            8: 'inactive',
+        }
+
+    @property
+    def status(self):
+        return _Service._status_map()[self.get('status')]
