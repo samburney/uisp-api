@@ -75,7 +75,7 @@ class UispCommon:
 
         return urllib.parse.urljoin(self.base_url, endpoint)
 
-    def get_json(self, endpoint: str, use_cache=True):
+    def get_json(self, endpoint: str, use_cache=True, cache_timeout=60):
         json = None
         url = self.make_url(endpoint)
         cache_key = cache.make_func_cache_key({'endpoint': endpoint})
@@ -86,13 +86,13 @@ class UispCommon:
             resp = self.conn.get(url)
             if resp.status_code == 200:
                 json = resp.json()
-                self.cache.set(cache_key, json, 60)
+                self.cache.set(cache_key, json, cache_timeout)
 
         return json
 
-    def get_dataframe(self, endpoint: str, drop_hashable: bool = True, use_cache=True):
+    def get_dataframe(self, endpoint: str, drop_hashable: bool = True, use_cache=True, cache_timeout=60):
         df = None
-        json = self.get_json(endpoint=endpoint, use_cache=use_cache)
+        json = self.get_json(endpoint=endpoint, use_cache=use_cache, cache_timeout=cache_timeout)
 
         if json is not None:
             df = pd.DataFrame(json)
