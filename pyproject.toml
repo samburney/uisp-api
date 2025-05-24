@@ -1,0 +1,7 @@
+[project]
+name = "uisp-api"
+version = "0.0.1a"
+dependencies = [
+    "flask",
+    "flask-caching",
+]
