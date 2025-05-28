@@ -12,6 +12,7 @@ class UcrmClient(UispCommon):
         # Get a persistent requests session
         self.conn = self._make_requests_session()
 
+    # Clients
     def new_client(self):
         '''
         Get an instance of the Client object
@@ -28,6 +29,44 @@ class UcrmClient(UispCommon):
 
         return client
 
+    @staticmethod
+    def _get_client_type(client_type_id: int):
+        '''
+        Return named client type
+
+        client_type_id int: clientType as provided from client API
+        '''
+        client_type = None
+
+        if client_type_id == 1:
+            client_type = 'individual'
+        elif client_type_id == 2:
+            client_type = 'business'
+        else:
+            raise ValueError('`client_type` must be 1 or 2')
+
+        return client_type
+
+    @staticmethod
+    def _get_client_display_name(client):
+        '''
+        Return client display name
+
+        client dict: Client data as provided from client API
+        '''
+        client_display_name = None
+
+        # Differentate display names for residential and company clients
+        if client['clientType'] == 1:
+            client_display_name = f'{client['firstName']} {client['lastName']}'
+        elif client['clientType'] == 2:
+            client_display_name = f'{client['companyName']}'
+        else:
+            raise ValueError('`clientType` must be 1 or 2')
+
+        return client_display_name
+
+    # Services
     def new_service(self):
         '''
         Get an instance of the Service object
