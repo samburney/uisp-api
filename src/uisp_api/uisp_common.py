@@ -118,6 +118,12 @@ class GenericObject:
         if not hasattr(self, '_id'):
             self._id = None
 
+        # Caching defaults
+        if not hasattr(self, 'use_cache'):
+            self.use_cache = True
+        if not hasattr(self, 'cache_timeout'):
+            self.cache_timeout = 60
+
         # Check endpoint is defined
         if not hasattr(self, '_endpoint') or self._endpoint is None:
             raise ValueError('`endpoint` must be defined')
@@ -129,16 +135,17 @@ class GenericObject:
             with schema_path.open('r') as file:
                 self._jsonschema = json.load(file)
 
-        # Get existing API endpoint data
-        self._data = None
-        if self._id is not None:
-            self._data = self._parent.get_json(self._endpoint)
-
-        elif self._jsonschema is not None:
-            self._data = self._parent.util.generate_skeleton(self._jsonschema)
-
-        else:
+        # Get existing API endpoint data if it wasn't pre-filled
+        if not hasattr(self, '_data'):
             self._data = None
+            if self._id is not None:
+                self._data = self._parent.get_json(self._endpoint)
+
+            elif self._jsonschema is not None:
+                self._data = self._parent.util.generate_skeleton(self._jsonschema)
+
+            else:
+                self._data = None
 
         # Default list of keys that cannot be modified
         self._immutable_keys = [
@@ -205,3 +212,9 @@ class GenericObject:
         Send updated data to UISP database
         '''
         raise NotImplementedError('The `save()` method has not been implemented.')
+
+    def to_df(self):
+        '''
+        Return DataFrame of instance data
+        '''
+        return pd.json_normalize(self._data)

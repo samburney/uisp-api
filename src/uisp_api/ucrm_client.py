@@ -1,3 +1,5 @@
+import pandas as pd
+
 from .uisp_common import UispCommon, GenericObject
 
 
@@ -107,19 +109,40 @@ class Client(GenericObject):
         return self._parent._get_client_display_name(self._data)
 
     @property
-    def services(self, use_cache=True, cache_timeout=60):
-        return self._parent.get_json(f'clients/services?clientId={self._id}', use_cache, cache_timeout)
+    def services(self):
+        services = []
+        services_data = self._parent.get_json(f'clients/services?clientId={self._id}', self.use_cache, self.cache_timeout)
+
+        for service_data in services_data:
+            service = Service(parent=self._parent, service_id=service_data['id'], _service_data=service_data)
+            services.append(service)
+
+        return services
+
+    @property
+    def services_df(self):
+        services_df = None
+
+        for service in self.services:
+            if services_df is None:
+                services_df = service.to_df().dropna(axis=1, how='all')
+            else:
+                services_df = pd.concat([services_df, service.to_df().dropna(axis=1, how='all')], ignore_index=True)
+
+        return services_df
 
 
 class Service(GenericObject):
     '''
     Object representing the `clients/services/{id}` API method
     '''
-
-    def __init__(self, parent, service_id=None):
+    def __init__(self, parent, service_id=None, _service_data=None):
         self._id = service_id
         self._schema = 'services'
         self._endpoint = f'clients/services/{self._id}'
+
+        if _service_data is not None:
+            self._data = _service_data
 
         # Initialising GenericObject class
         super().__init__(parent)
@@ -144,3 +167,21 @@ class Service(GenericObject):
     @property
     def status(self):
         return Service._status_map()[self.get('status')]
+
+    def to_df(self):
+        '''
+        Return DataFrame of instance data including custom attributes
+        '''
+        df = pd.json_normalize(self._data)
+
+        # Add custom attributes
+        df = df.assign(status_name=self.status)
+
+        return df
+
+    def get_attribute(self, key):
+        attributes = self.get('attributes')
+
+        attribute = [attribute for attribute in attributes if attribute['key'] == key][0]
+
+        return attribute
