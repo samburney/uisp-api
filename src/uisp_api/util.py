@@ -1,7 +1,32 @@
 import collections.abc
+import configargparse
+
+from pathlib import Path
 
 
 class Util:
+    @property
+    def project_root(self):
+        '''
+        Define the project_root directory.  Used as the default location to
+        look for config.yaml and cache folder.
+        '''
+        script_path = Path(__file__).resolve()
+        project_root = script_path.parents[2]
+
+        return project_root
+
+    # Define config as provided by config.yaml
+    @property
+    def config(self):
+        config = self.parse_config()
+
+        # Defined empty webapp dict
+        if not hasattr(config, 'webapp'):
+            config.webapp = {}
+
+        return config
+
     @staticmethod
     def is_hashable(obj):
         return isinstance(obj, collections.abc.Hashable)
@@ -93,3 +118,25 @@ class Util:
                 skeleton[key] = Util.get_default_value(prop_schema)
 
         return skeleton
+
+    def parse_config(self):
+        '''
+        Parse configuration from its various sources.
+        '''
+        parser = configargparse.ArgumentParser(
+            default_config_files=[
+                Path(self.project_root, 'config.yml'),
+                Path(self.project_root, 'config.yaml'),
+            ]
+        )
+
+        parser.add_argument('-c', '--config', env_var='UISP_API_CONFIG_FILE',
+                            is_config_file=True, help='Path to config.yaml')
+        parser.add_argument('--cache-debug', env_var='UISP_API_CACHE_DEBUG', default=False,
+                            help='Enable cache helper debugging')
+        parser.add_argument('--cache-type', default='FileSystemCache', env_var='UISP_API_CACHE_TYPE',
+                            help='Cache provider module')
+        parser.add_argument('--cache-dir', default=Path(self.project_root, 'cache'), env_var='UISP_API_CACHE_DIR',
+                            help='Location of cache directory when using cache-type `FileSystemCache`')
+
+        return parser.parse_args()

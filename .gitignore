@@ -1,7 +1,8 @@
 __pycache__/
-FileSystemCache/
-venv/
+cache/*
+venv*/
 
 *.egg-info
 
 test*.py
+config.yaml

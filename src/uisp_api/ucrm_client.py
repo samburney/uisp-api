@@ -17,7 +17,7 @@ class UcrmClient(UispCommon):
         '''
         Get an instance of the Client object
         '''
-        client = _Client(self)
+        client = Client(self)
 
         return client
 
@@ -25,7 +25,7 @@ class UcrmClient(UispCommon):
         '''
         Get an instance of the Client object
         '''
-        client = _Client(self, client_id)
+        client = Client(self, client_id)
 
         return client
 
@@ -71,7 +71,7 @@ class UcrmClient(UispCommon):
         '''
         Get an instance of the Service object
         '''
-        service = _Service(self)
+        service = Service(self)
 
         return service
 
@@ -79,12 +79,12 @@ class UcrmClient(UispCommon):
         '''
         Get an instance of the Service object
         '''
-        service = _Service(self, service_id)
+        service = Service(self, service_id)
 
         return service
 
 
-class _Client(GenericObject):
+class Client(GenericObject):
     '''
     Object representing the `clients/{id}` API method
     '''
@@ -102,8 +102,16 @@ class _Client(GenericObject):
             if 'addressData' in self._data:
                 del self._data['addressData']
 
+    @property
+    def display_name(self):
+        return self._parent._get_client_display_name(self._data)
 
-class _Service(GenericObject):
+    @property
+    def services(self, use_cache=True, cache_timeout=60):
+        return self._parent.get_json(f'clients/services?clientId={self._id}', use_cache, cache_timeout)
+
+
+class Service(GenericObject):
     '''
     Object representing the `clients/services/{id}` API method
     '''
@@ -135,4 +143,4 @@ class _Service(GenericObject):
 
     @property
     def status(self):
-        return _Service._status_map()[self.get('status')]
+        return Service._status_map()[self.get('status')]

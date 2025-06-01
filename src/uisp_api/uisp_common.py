@@ -7,21 +7,21 @@ import pandas as pd
 
 from pathlib import Path
 
-from .util import Util as util
+from .util import Util
 from .caching import Cache
 
 
-# Make cache available for use as a decorator
-cache = Cache()
-
-
 class UispCommon:
+    util = Util()
+    caching = Cache()
+
     def __init__(self, url: str, app_key: str, port: int = 443, verify_ssl: bool = True):
         self._url = url
         self._app_key = app_key
         self._port = port
         self._verify_ssl = verify_ssl
         self._path = Path(__file__).resolve().parent
+        self.config = UispCommon.util.config
 
         # Disable Insecure HTTPS warning
         if self._verify_ssl is False:
@@ -30,13 +30,13 @@ class UispCommon:
         # Placeholder for self.conn
         self.conn = None
 
-        # **TODO** cache config
+        # Consume cache config
         self.cache_config = {
-            'DEBUG': True,
-            'CACHE_TYPE': 'FileSystemCache',
-            'CACHE_DIR': 'FileSystemCache',
+            'DEBUG': self.config.cache_debug,
+            'CACHE_TYPE': self.config.cache_type,
+            'CACHE_DIR': self.config.cache_dir,
         }
-        self.cache = cache(self.cache_config)
+        self.cache = UispCommon.caching(self.cache_config)
 
     def _make_base_url(self, api_path: str):
         parsed_url = urllib.parse.urlparse(self._url)
@@ -78,7 +78,7 @@ class UispCommon:
     def get_json(self, endpoint: str, use_cache=True, cache_timeout=60):
         json = None
         url = self.make_url(endpoint)
-        cache_key = cache.make_func_cache_key({'endpoint': endpoint})
+        cache_key = self.caching.make_func_cache_key({'endpoint': endpoint})
 
         if self.cache.has(cache_key) and use_cache is True:
             return self.cache.get(cache_key)
@@ -98,7 +98,7 @@ class UispCommon:
             df = pd.DataFrame(json)
 
             if drop_hashable is True:
-                hashable_columns = util.find_hashable_columns(df)
+                hashable_columns = self.util.find_hashable_columns(df)
 
                 if len(hashable_columns) > 0:
                     df = df.drop(hashable_columns, axis=1)
@@ -132,10 +132,10 @@ class GenericObject:
         # Get existing API endpoint data
         self._data = None
         if self._id is not None:
-            self._data = parent.get_json(self._endpoint)
+            self._data = self._parent.get_json(self._endpoint)
 
         elif self._jsonschema is not None:
-            self._data = util.generate_skeleton(self._jsonschema)
+            self._data = self._parent.util.generate_skeleton(self._jsonschema)
 
         else:
             self._data = None
