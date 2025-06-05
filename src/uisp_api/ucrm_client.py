@@ -109,6 +109,10 @@ class Client(GenericObject):
         return self._parent._get_client_display_name(self._data)
 
     @property
+    def type(self):
+        return self._parent._get_client_type(self.get('clientType'))
+
+    @property
     def services(self):
         services = []
         services_data = self._parent.get_json(f'clients/services?clientId={self._id}', self.use_cache, self.cache_timeout)
