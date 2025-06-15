@@ -172,6 +172,10 @@ class Service(GenericObject):
     def status(self):
         return Service._status_map()[self.get('status')]
 
+    @property
+    def circuit_id(self):
+        return self.get_attribute('externalServiceId')['value']
+
     def to_df(self):
         '''
         Return DataFrame of instance data including custom attributes
