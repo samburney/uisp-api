@@ -176,6 +176,10 @@ class Service(GenericObject):
     def circuit_id(self):
         return self.get_attribute('externalServiceId')['value']
 
+    @property
+    def client(self):
+        return self._parent.get_client(self.get('clientId'))
+
     def to_df(self):
         '''
         Return DataFrame of instance data including custom attributes
